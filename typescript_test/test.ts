@@ -26,7 +26,6 @@ function testSelector() {
   // typings:expect-error
   const num: number = selector({foo: 'bar'});
 
-  // typings:expect-error
   createSelector(
     (state: {foo: string}) => state.foo,
     (state: {bar: number}) => state.bar,
@@ -104,7 +103,7 @@ function testConnect() {
   const connected = connect(
     createSelector(
       (state: {foo: string}) => state.foo,
-      (state: never, props: {bar: number}) => props.bar,
+      (state: {}, props: {bar: number}) => props.bar,
       (foo, bar) => ({foo, baz: bar}),
     )
   )(props => {
@@ -143,7 +142,7 @@ function testParametricSelector() {
 
   const selector = createSelector(
     (state: State) => state.foo,
-    (state: never, props: Props) => props.bar,
+    (state: {}, props: Props) => props.bar,
     (foo, bar) => ({foo, bar}),
   );
 
@@ -156,6 +155,7 @@ function testParametricSelector() {
   const foo: string = ret.foo;
   const bar: number = ret.bar;
 
+  // typings:expect-error
   const selector2 = createSelector(
     (state) => state.foo,
     (state) => state.foo,
@@ -175,7 +175,7 @@ function testArrayArgument() {
   const selector = createSelector([
     (state: {foo: string}) => state.foo,
     (state: {foo: string}) => state.foo,
-    (state: never, props: {bar: number}) => props.bar,
+    (state: {}, props: {bar: number}) => props.bar,
   ], (foo1, foo2, bar) => ({foo1, foo2, bar}));
 
   const ret = selector({foo: 'fizz'}, {bar: 42});
@@ -188,7 +188,6 @@ function testArrayArgument() {
     (state: {foo: string}) => state.foo,
   ]);
 
-  // typings:expect-error
   createSelector([
     (state: {foo: string}) => state.foo,
     (state: {bar: number}) => state.bar,
@@ -279,7 +278,7 @@ function testArrayArgument() {
   selector2({foo: 'fizz'}, {bar: 42});
 
   const parametric = createSelector([
-    (state: never, props: {bar: number}) => props.bar,
+    (state: {}, props: {bar: number}) => props.bar,
     (state: {foo: string}) => state.foo,
     (state: {foo: string}) => state.foo,
     (state: {foo: string}) => state.foo,
@@ -350,7 +349,7 @@ function testCreateSelectorCreator() {
 
   const parametric = createSelector(
     (state: {foo: string}) => state.foo,
-    (state: never, props: {bar: number}) => props.bar,
+    (state: {}, props: {bar: number}) => props.bar,
     (foo, bar) => ({foo, bar}),
   );
 
